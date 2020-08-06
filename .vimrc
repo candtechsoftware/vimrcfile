@@ -61,6 +61,7 @@ inoremap <S-Down> <Esc>:m+<CR>
 "
 call plug#begin('~/.vim/plugged')
 Plug 'sheerun/vim-polyglot'         " Support for a lot of languages
+Plug 'mhinz/vim-startify'           " Better start screen
 Plug 'itchyny/lightline.vim'        " Bottom status line
 Plug 'mhinz/vim-signify'            " See changes of file in local repo git, hg etc
 Plug 'prettier/vim-prettier', {
@@ -68,6 +69,7 @@ Plug 'prettier/vim-prettier', {
   \ 'branch': 'release/0.x'
   \ }
 Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] } " File-tree
+Plug 'sheerun/vim-polyglot'
 Plug 'majutsushi/tagbar',   { 'on': ['TagbarToggle'] }                   " Tags-tree
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'Raimondi/delimitMate'         " Auto close bracket's
@@ -77,6 +79,8 @@ Plug 'ap/vim-css-color', { 'for': ['css', 'scss', 'sass', 'less', 'stylus'] } " 
 Plug 'Shougo/neosnippet.vim' | Plug 'Shougo/neosnippet-snippets' " Snippets and Engine
 Plug 'scrooloose/syntastic'         " Syntax checker
 Plug 'Chiel92/vim-autoformat',{ 'on': 'Autoformat' }             " Indent fix on file
+Plug 'easymotion/vim-easymotion'    " Searh in file
+Plug 'ctrlpvim/ctrlp.vim'           " Search files
 Plug 'rust-lang/rust.vim'           "for rust
 Plug 'tpope/vim-surround'
 Plug 'shime/vim-livedown', { 'for': 'markdown' } " Install Node and: npm install -g livedown
@@ -84,8 +88,10 @@ Plug 'lifepillar/vim-mucomplete'    " Auto-complete Engine
 Plug 'rust-lang/rust.vim'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'kristijanhusak/vim-hybrid-material'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'morhetz/gruvbox'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
@@ -96,14 +102,16 @@ Plug 'arcticicestudio/nord-vim'
 
 call plug#end()
 
-colorscheme nord
+autocmd vimenter * colorscheme gruvbox
 
-noremap <F12> <Esc>:syntax sync fromstart<CR>
+no:CocInstall coc-rust-analyzer
+
+inoremap <F12> <Esc>:syntax sync fromstart<CR>
 inoremap <F12> <C-o>:syntax sync fromstart<CR>
 
-
+let g:gruvbox_termcolors=256
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme='nord'
+let g:airline_theme='gruvbox'
 
 " --- The Greatest plugin of all time.  I am not bias
 let g:vim_be_good_floating = 1
@@ -163,7 +171,10 @@ function! SyntasticCheckHook(errors) " For optimize size a list of errors and wa
         let g:syntastic_loc_list_height = min([len(a:errors), 10])
     endif
 endfunction
-
+"   SEARCH
+let g:ctrlp_cmd = 'CtrlPMixed' " Improved behavior CtrlP
+map  / <Plug>(easymotion-sn)
+omap / <Plug>(easymotion-tn)
 "   EXTRA
 filetype plugin indent on      " Enable file type detection and do lang-dependent indenting.
 set laststatus=2               " Always show status line
