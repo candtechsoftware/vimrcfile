@@ -289,4 +289,4 @@ nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window
-noremap <silent> <space>p  :<C-u>CocListResume<CR>
+noremap <silent> <space>p  :<C-u>CocListResume<CR> 
