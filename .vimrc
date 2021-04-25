@@ -56,14 +56,12 @@ nnoremap <S-Up> :m-2<CR>
 nnoremap <S-Down> :m+<CR>
 inoremap <S-Up> <Esc>:m-2<CR>
 inoremap <S-Down> <Esc>:m+<CR>
-"
-" PLUGINS
+"" PLUGINS
 "
 call plug#begin('~/.vim/plugged')
 Plug 'sheerun/vim-polyglot'         " Support for a lot of languages
 Plug 'mhinz/vim-startify'           " Better start screen
-Plug 'itchyny/lightline.vim'        " Bottom status line
-Plug 'mhinz/vim-signify'            " See changes of file in local repo git, hg etc
+Plug 'sainnhe/sonokai'
 Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install',
   \ 'branch': 'release/0.x'
@@ -71,7 +69,7 @@ Plug 'prettier/vim-prettier', {
 Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] } " File-tree
 Plug 'sheerun/vim-polyglot'
 Plug 'majutsushi/tagbar',   { 'on': ['TagbarToggle'] }                   " Tags-tree
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 Plug 'Raimondi/delimitMate'         " Auto close bracket's
 Plug 'scrooloose/nerdcommenter', { 'on': '<plug>NERDCommenterToggle' }   " For comment line(s)
 Plug 'mattn/emmet-vim',   " For Web-dev
@@ -81,37 +79,37 @@ Plug 'scrooloose/syntastic'         " Syntax checker
 Plug 'Chiel92/vim-autoformat',{ 'on': 'Autoformat' }             " Indent fix on file
 Plug 'easymotion/vim-easymotion'    " Searh in file
 Plug 'ctrlpvim/ctrlp.vim'           " Search files
-Plug 'rust-lang/rust.vim'           "for rust
-Plug 'tpope/vim-surround'
-Plug 'shime/vim-livedown', { 'for': 'markdown' } " Install Node and: npm install -g livedown
 Plug 'lifepillar/vim-mucomplete'    " Auto-complete Engine
-Plug 'rust-lang/rust.vim'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'kristijanhusak/vim-hybrid-material'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'morhetz/gruvbox'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'racer-rust/vim-racer'
-Plug 'flazz/vim-colorschemes'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-Plug 'arcticicestudio/nord-vim'
-
+Plug 'rhysd/vim-clang-format'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'kristijanhusak/vim-hybrid-material'
 call plug#end()
 
-autocmd vimenter * colorscheme gruvbox
-
+colorscheme hybrid_material 
 no:CocInstall coc-rust-analyzer
+syntax enable
 
 inoremap <F12> <Esc>:syntax sync fromstart<CR>
 inoremap <F12> <C-o>:syntax sync fromstart<CR>
 
-let g:gruvbox_termcolors=256
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme='gruvbox'
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline_powerline_fonts = 1
+let g:airline_left_sep = '»'
+let g:airline_left_sep = '▶'
+let g:airline_right_sep = '«'
+let g:airline_right_sep = '◀'
+
 
 " --- The Greatest plugin of all time.  I am not bias
 let g:vim_be_good_floating = 1
@@ -137,8 +135,8 @@ if executable('rg')
 endif
 
 set encoding=UTF-8  " Default encoding
-set tabstop=2
-set softtabstop=2   " Set tabs to have 4 spaces
+set tabstop=4
+set softtabstop=4   " Set tabs to have 4 spaces
 set autoindent      " Indent when moving to the next line while writing code
 set expandtab       " Expand tabs into spaces
 set shiftwidth=2    " When using the >> or << commands, shift lines by 4 spaces
@@ -221,21 +219,6 @@ let g:mucomplete#no_mappings = 1
 let g:mucomplete#enable_auto_at_startup = 1
 
 
-
-let g:airline_left_sep='>'
-let g:airline_right_sep='<'
-let g:airline_detect_modified=1
-let g:airline_detect_crypt=1
-let g:airline_detect_spell=1
-let g:airline_detect_spelllang=1
-let g:airline_detect_iminsert=0
-let g:airline_inactive_collapse=1
-let g:airline_inactive_alt_sep=1
-let g:airline_theme='dark'
-let g:airline_powerline_fonts = 1
-let g:airline_symbols_ascii = 1
-let g:airline_mode_map = {} " see source for the defaults
-
 " if hidden is not set, TextEdit might fail.
 set hidden
 
@@ -290,3 +273,18 @@ nmap <silent> gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window
 noremap <silent> <space>p  :<C-u>CocListResume<CR> 
+let g:rustfmt_autosave = 1
+let g:clang_format#style_options = {
+            \ "AccessModifierOffset" : -4,
+            \ "AllowShortIfStatementsOnASingleLine" : "true",
+            \ "AlwaysBreakTemplateDeclarations" : "true",
+            \ "Standard" : "C++11"}
+
+" map to <Leader>cf in C++ code
+autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
+autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
+" if you install vim-operator-user
+autocmd FileType c,cpp,objc map <buffer><Leader>x <Plug>(operator-clang-format)
+" Toggle auto formatting:
+nmap <Leader>C :ClangFormatAutoToggle<CR>
+
