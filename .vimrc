@@ -3,8 +3,8 @@
 "
 " Make leader the spacebar key
 let mapleader = " "
-nnoremap <leader>ff <cmd>:Files<cr>
-nnoremap <leader>fw <cmd>:BLines!<cr>
+map <Leader>ff :Files!<CR> 
+map <Leader>fw :BLines!<CR> 
 map <C-g> <Esc><Esc>:BCommits!<CR> 
 
 " SPC + Q Exit from file
@@ -35,12 +35,11 @@ nmap <Leader>\ :vsplit<CR>
 nmap <Leader>- :split<CR>
 nmap <Leader>t :tabnew<CR>
 " Run Go Code 
-nmap <Leader>gl :GoLint<CR>
 
 " CTRL + E Call Emmet
 let g:user_emmet_expandabbr_key = '<C-e>'
 " SPC + 1...9 Go to that tab
-map <silemt> <Leader>1 1gt
+map <silent> <Leader>1 1gt
 map <silent> <Leader>2 2gt
 map <silent> <Leader>3 3gt
 map <silent> <Leader>4 4gt
@@ -55,70 +54,64 @@ nnoremap <S-Up> :m-2<CR>
 nnoremap <S-Down> :m+<CR>
 inoremap <S-Up> <Esc>:m-2<CR>
 inoremap <S-Down> <Esc>:m+<CR>
-"
-" PLUGINS
+"" PLUGINS
 "
 call plug#begin('~/.vim/plugged')
+Plug 'sheerun/vim-polyglot'         " Support for a lot of languages
+Plug 'mhinz/vim-startify'           " Better start screen
+Plug 'sainnhe/sonokai'
 Plug 'prettier/vim-prettier', {
   \ 'do': 'yarn install',
   \ 'branch': 'release/0.x'
   \ }
 Plug 'scrooloose/nerdtree', { 'on': ['NERDTreeToggle', 'NERDTreeFind'] } " File-tree
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
 Plug 'sheerun/vim-polyglot'
 Plug 'majutsushi/tagbar',   { 'on': ['TagbarToggle'] }                   " Tags-tree
+Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
 Plug 'Raimondi/delimitMate'         " Auto close bracket's
 Plug 'scrooloose/nerdcommenter', { 'on': '<plug>NERDCommenterToggle' }   " For comment line(s)
+Plug 'mattn/emmet-vim',   " For Web-dev
 Plug 'ap/vim-css-color', { 'for': ['css', 'scss', 'sass', 'less', 'stylus'] } " Highlight
+Plug 'scrooloose/syntastic'         " Syntax checker
 Plug 'Chiel92/vim-autoformat',{ 'on': 'Autoformat' }             " Indent fix on file
+Plug 'easymotion/vim-easymotion'    " Searh in file
 Plug 'ctrlpvim/ctrlp.vim'           " Search files
-Plug 'rust-lang/rust.vim'           "for rust
-Plug 'cormacrelf/vim-colors-github'
-Plug 'rhysd/vim-clang-format'
-Plug 'tpope/vim-surround'
-Plug 'shime/vim-livedown', { 'for': 'markdown' } " Install Node and: npm install -g livedown
 Plug 'lifepillar/vim-mucomplete'    " Auto-complete Engine
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'chriskempson/base16-vim'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-Plug 'neovim/nvim-lspconfig'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'kristijanhusak/vim-hybrid-material'
+Plug 'terryma/vim-multiple-cursors'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
-Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/lsp_extensions.nvim'
-Plug 'nvim-lua/completion-nvim'
-" Testing
-Plug 'justinmk/vim-sneak'
-Plug 'machakann/vim-highlightedyank'
-Plug 'andymass/vim-matchup'
-
+Plug 'racer-rust/vim-racer'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'rhysd/vim-clang-format'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'kristijanhusak/vim-hybrid-material'
 call plug#end()
-let g:loaded_matchit = 1
 
-" For Neovim 0.1.3 and 0.1.4
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-
-" Or if you have Neovim >= 0.1.5
-set termguicolors
-
-set background=dark
-" Theme
-colorscheme github
+colorscheme hybrid_material 
+no:CocInstall coc-rust-analyzer
 syntax enable
-
 
 inoremap <F12> <Esc>:syntax sync fromstart<CR>
 inoremap <F12> <C-o>:syntax sync fromstart<CR>
 
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline_powerline_fonts = 1
+let g:airline_left_sep = '»'
+let g:airline_left_sep = '▶'
+let g:airline_right_sep = '«'
+let g:airline_right_sep = '◀'
+
 
 " --- The Greatest plugin of all time.  I am not bias
 let g:vim_be_good_floating = 1
 
-" --- vim go (polyglot) setings.
+" --- vim go (polyglot) settings.
 let g:go_highlight_build_constraints = 1
 let g:go_highlight_extra_types = 1
 let g:go_highlight_fields = 1
@@ -133,11 +126,6 @@ let g:go_highlight_generate_tags = 1
 let g:go_highlight_format_strings = 1
 let g:go_highlight_variable_declarations = 1
 let g:go_auto_sameids = 1
-let g:go_list_type = "quickfix"
-let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
-let g:go_metalinter_autosave = 1
-let g:rustfmt_autosave = 1
-
 
 if executable('rg')
     let g:rg_derive_root='true'
@@ -209,13 +197,6 @@ vmap <C-c> "+y
 nmap <C-v> "+pa
 imap <C-v> <Esc> "+pa
 set noeb vb t_vb=             " Disable beep
-"   SNIPPETS
-"
-" SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-            \ "\<Plug>(neosnippet_expand_or_jump)"
-            \: pumvisible() ? "\<C-n>" : "\<TAB>"
-imap <expr><S-TAB> mucomplete#extend_fwd("\<down>")
 "
 "   AUTOCOMPLETIONS
 "
@@ -227,21 +208,6 @@ let g:mucomplete#chains = {
 let g:mucomplete#no_mappings = 1
 let g:mucomplete#enable_auto_at_startup = 1
 
-
-
-let g:airline_left_sep='>'
-let g:airline_right_sep='<'
-let g:airline_detect_modified=1
-let g:airline_detect_crypt=1
-let g:airline_detect_spell=1
-let g:airline_detect_spelllang=1
-let g:airline_detect_iminsert=0
-let g:airline_inactive_collapse=1
-let g:airline_inactive_alt_sep=1
-let g:airline_theme='dark'
-let g:airline_powerline_fonts = 1
-let g:airline_symbols_ascii = 1
-let g:airline_mode_map = {} " see source for the defaults
 
 " if hidden is not set, TextEdit might fail.
 set hidden
@@ -278,80 +244,36 @@ endfunction
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
 
-nmap <leader>rr <Plug> (coc-rename) 
+nmap <leader>rr <Plug> (coc-rename)
 nnoremap <leader>prw :CocSearch <C-R>=expand("<cword>")<CR><CR> 
 
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
 " Coc only does snippet and additional edit on confirm.
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
+" Use `[c` and `]c` to navigate diagnostics
+nmap <silent> [c <Plug>(coc-diagnostic-prev)
+nmap <silent> ]c <Plug>(coc-diagnostic-next)
 
 " Remap keys for gotos
-"nmap <silent> gd <Plug>(coc-definition)
-" nmap <silent> gtr <Plug>(coc-references)
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
 
-let g:clang_format#code_style='llvm'
+" Use K to show documentation in preview window
+noremap <silent> <space>p  :<C-u>CocListResume<CR> 
+let g:rustfmt_autosave = 1
 let g:clang_format#style_options = {
-            \ 'IndentWidth' : '8',
-            \ 'UseTab' : 'Always',
-            \ 'BreakBeforeBraces' : 'Linux',
-            \ 'AllowShortIfStatementsOnASingleLine': 'false',
-	    \ 'AllowShortBlocksOnASingleLine': 'false',
-	    \ 'AllowShortCaseLabelsOnASingleLine': 'false',
-	    \ 'AllowShortFunctionsOnASingleLine': 'None',
-	    \ 'AllowShortLoopsOnASingleLine': 'false',
-            \ 'IndentCaseLabels' : 'false'}
+            \ "AccessModifierOffset" : -4,
+            \ "AllowShortIfStatementsOnASingleLine" : "true",
+            \ "AlwaysBreakTemplateDeclarations" : "true",
+            \ "Standard" : "C++11"}
 
-
-
-" LSP configuration
-lua << END
-local lspconfig = require('lspconfig')
-local on_attach = function(client, bufnr)
-  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-
-  --Enable completion triggered by <c-x><c-o>
-  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-  -- Mappings.
-  local opts = { noremap=true, silent=true }
-
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
-  buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
-  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', '<space>a', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
-  buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
-
-  -- Forward to other plugins
-  require'completion'.on_attach(client)
-end
-
-local servers = { "rust_analyzer", "gopls",  "clangd", "pyright"} 
-for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
-    on_attach = on_attach,
-    flags = {
-      debounce_text_changes = 150,
-    }
-  }
-end
-
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-  vim.lsp.diagnostic.on_publish_diagnostics, {
-    virtual_text = true,
-    signs = true,
-    update_in_insert = true,
-  }
-)
-END
+" map to <Leader>cf in C++ code
+autocmd FileType c,cpp,objc nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
+autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
+" if you install vim-operator-user
+autocmd FileType c,cpp,objc map <buffer><Leader>x <Plug>(operator-clang-format)
+" Toggle auto formatting:
+nmap <Leader>C :ClangFormatAutoToggle<CR>
